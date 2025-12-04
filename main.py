@@ -9,6 +9,7 @@ from aiogram import Bot, Dispatcher # Необходимо для запуска
 from aiogram.types import Message # Для обработки типа сообщений
 from aiogram.filters import CommandStart # Импортируем, чтобы обработать команду /start
 
+from router import rt
 bot = Bot(token=os.getenv('TOKEN')) # Берем токен
 
 dp = Dispatcher() # Корневой роутер (обработка входящих обновлений)
@@ -21,6 +22,7 @@ async def start(message: Message): # Принимает объект "message" �
 
 
 async def main():
+    dp.include_router(rt) # Подключаем роутер
     await bot.delete_webhook(drop_pending_updates=True) # Тем самым, сообщения, которые были отправлены боту, когда он был выключен, при включении будут игнорироваться
     await dp.start_polling(bot)
   
