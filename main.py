@@ -5,27 +5,21 @@ from dotenv import load_dotenv # За ним же из "dotenv", импорти�
 
 load_dotenv() # Подгружаем из ".env"
 
-from aiogram import Bot, Dispatcher # Необходимо для запуска и дальнейшей логики бота
-from aiogram.types import Message # Для обработки типа сообщений
+from aiogram import Bot, Dispatcher, types # Необходимо для запуска и дальнейшей логики бота
+from aiogram.types import Message, FSInputFile  # Для обработки типа сообщений
 from aiogram.filters import CommandStart # Импортируем, чтобы обработать команду /start
 
-from router import rt
+from handlers.router import rt
 bot = Bot(token=os.getenv('TOKEN')) # Берем токен
 
 dp = Dispatcher() # Корневой роутер (обработка входящих обновлений)
 
-
-@dp.message(CommandStart()) # Роутер, который обрабатывает сообщение /start
-async def start(message: Message): # Принимает объект "message" типа "Message"
-    await message.reply('Привет!') # Подразумевает ответ бота на /start обычным сообщением, а не ответом на сообщение
-    await message.answer("Скоро тут будет меню")
-
-
 async def main():
+#   dp.include_routers(user, creator) для 2ух и > роутеров
     dp.include_router(rt) # Подключаем роутер
     await bot.delete_webhook(drop_pending_updates=True) # Тем самым, сообщения, которые были отправлены боту, когда он был выключен, при включении будут игнорироваться
     await dp.start_polling(bot)
-  
+
 if __name__  == '__main__':
     logging.basicConfig(level=logging.INFO) # Подключаем logging
     print('Бот включен!')
@@ -33,3 +27,14 @@ if __name__  == '__main__':
         asyncio.run(main())  
     except KeyboardInterrupt:
         print('Бот выключен!')
+
+
+
+
+
+
+
+"""
+Фамилия: {last_name if last_name else 'Не указана'}
+    ├ Username: @{username if username else 'Не указан'}
+"""
